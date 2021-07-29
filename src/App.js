@@ -1,22 +1,16 @@
-import axios from 'axios'
+// import axios from 'axios'
 import React, { Component } from 'react'
 import 'modern-normalize'
 import s from './app.module.css'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import api from './services/pixabay-api'
 
 import Searchbar from './Components/Searchbar'
 import ImageGallery from './Components/ImageGallery/ImageGallery'
 import Modal from './Components/Modal'
 import Button from './Components/Button'
 import CustomLoader from './Components/Loader'
-
-const fetchImage = async (query = '', page = 1) => {
-	console.log('query fetchImage', query)
-	return await axios.get(
-		`https://pixabay.com/api/?q=${query}&page=${page}&key=21922631-b9054864096d193e79c9fc0a3&image_type=photo&orientation=horizontal&per_page=12`
-	)
-}
 
 class App extends Component {
 	state = {
@@ -33,42 +27,38 @@ class App extends Component {
 		this.setState({ query })
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	async componentDidUpdate(prevProps, prevState) {
 		if (prevState.query !== this.state.query) {
-			;(async () => {
-				try {
-					this.setState({ loading: true, query: this.state.query })
-					const { query } = this.state
-					const img = await fetchImage(query)
-					this.setState({ image: img.data.hits, loading: false })
-				} catch (error) {
-					this.setState({ errors: error.response.status, loading: false })
-				}
-			})()
+			try {
+				this.setState({ loading: true, query: this.state.query })
+				const { query } = this.state
+				const img = await api(query)
+				this.setState({ image: img.data.hits, loading: false })
+			} catch (error) {
+				this.setState({ errors: error.response.status, loading: false })
+			}
 		}
 
 		if (prevState.currentPage !== this.state.currentPage) {
-			;(async () => {
-				try {
-					this.setState({ loading: true, query: this.state.query })
-					const { query } = this.state
-					const { currentPage } = this.state
+			try {
+				this.setState({ loading: true, query: this.state.query })
+				const { query } = this.state
+				const { currentPage } = this.state
 
-					const img = await fetchImage(query, currentPage)
+				const img = await api(query, currentPage)
 
-					this.setState({
-						image: [...prevState.image, ...img.data.hits],
-						loading: false,
-					})
+				this.setState({
+					image: [...prevState.image, ...img.data.hits],
+					loading: false,
+				})
 
-					window.scrollTo({
-						top: document.documentElement.scrollHeight,
-						behavior: 'smooth',
-					})
-				} catch (error) {
-					this.setState({ errors: error.response.status, loading: false })
-				}
-			})()
+				window.scrollTo({
+					top: document.documentElement.scrollHeight,
+					behavior: 'smooth',
+				})
+			} catch (error) {
+				this.setState({ errors: error.response.status, loading: false })
+			}
 		}
 	}
 
@@ -111,7 +101,7 @@ class App extends Component {
 			<>
 				<div>
 					<Searchbar onSubmit={this.hendleFormSubmit} />
-					<ToastContainer position="top-right" autoClose={2000} />
+					<ToastContainer position="top-right" autoClose={4000} />
 
 					{newContent}
 					{showModal && (
