@@ -29,7 +29,8 @@ export const fetchImage = (query = '', page = 1) => {
 				toast.error('Error', error.message)
 				console.log('Error', error.message)
 			}
-			console.log(error.config)
+			toast.error('Error', error.config)
+			return console.log(error.config)
 		})
 }
 
