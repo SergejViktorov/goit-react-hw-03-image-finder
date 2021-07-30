@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import 'modern-normalize'
 import s from './app.module.css'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import api from './services/pixabay-api'
 
@@ -28,8 +28,7 @@ class App extends Component {
 	}
 
 	async componentDidUpdate(prevProps, prevState) {
-		
-			if (prevState.query !== this.state.query) {
+		if (prevState.query !== this.state.query) {
 			try {
 				this.setState({ loading: true, query: this.state.query })
 				const { query } = this.state
@@ -39,7 +38,6 @@ class App extends Component {
 				this.setState({ errors: error, loading: false })
 			}
 		}
-	
 
 		if (prevState.currentPage !== this.state.currentPage) {
 			try {
@@ -86,7 +84,7 @@ class App extends Component {
 
 	render() {
 		const { image, loading, errors, query, showModal } = this.state
-		 const see = image.length
+		const see = image.length
 		console.log('image', image.length)
 		const largeImageURL = this.state.modalImgProps
 		const content = errors ? (
@@ -94,7 +92,6 @@ class App extends Component {
 		) : (
 			<>
 				<ImageGallery image={image} openModal={this.handleImgClick} />
-				
 			</>
 		)
 
@@ -106,11 +103,10 @@ class App extends Component {
 				<div>
 					<Searchbar onSubmit={this.hendleFormSubmit} />
 					<ToastContainer position="top-right" autoClose={4000} />
-					
-					
+
 					{newContent}
 					{loading && <CustomLoader />}
-					
+
 					{see > 0 && <Button onClick={this.nextPage} />}
 					{showModal && (
 						<Modal onClose={this.toggleModal}>
