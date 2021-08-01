@@ -18,13 +18,11 @@ class Searchbar extends React.Component {
 	handleSubmit = (e) => {
 		e.preventDefault()
 
-		// Запрещает отправку пустого инпута
 		if (this.state.query.trim() === '') {
 			toast.error('Неккоректный запрос !')
 			return
 		}
 
-		// Отдать данные внешнему компоненту
 		this.props.onSubmit(this.state.query)
 
 		this.resetForm()
